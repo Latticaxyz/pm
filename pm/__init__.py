@@ -2,6 +2,8 @@ from importlib.metadata import version
 
 __version__ = version("lattica-pm")
 
-from . import polymarket
+from .polymarket.api import PolymarketAPI
 
-__all__ = ["__version__", "polymarket"]
+polymarket = PolymarketAPI()
+
+__all__ = ["__version__", "PolymarketAPI"]
