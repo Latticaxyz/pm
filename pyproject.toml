@@ -1,7 +1,52 @@
+#:tombi schema.strict = false
+
 [project]
-name = "polyfetch"
-version = "0.1.0"
-description = "Add your description here"
+name = "lattica-pm"
+version = "0.0.1"
+description = "Prediction market data aggregator "
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+authors = [
+  { name = "wkflanders", email = "wflan@seas.upenn.edu" },
+]
+dependencies = [
+  "httpx>=0.27.0",
+  "pandas>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+  "anyio>=4.0.0",
+  { include-group = "lint" },
+  { include-group = "security" },
+  { include-group = "test" },
+]
+lint = [
+  "black>=25.9.0",
+  "flake8>=7.3.0",
+  "flake8-bugbear>=25.10.21",
+  "flake8-comprehensions>=3.17.0",
+  "flake8-docstrings>=1.7.0",
+  "isort>=7.0.0",
+  "mypy>=1.18.2",
+  "ruff>=0.14.3",
+  "types-requests>=2.32.4.20250913",
+]
+security = [
+  "bandit>=1.8.6",
+  "vulture>=2.14",
+]
+test = [
+  "pytest>=8.4.2",
+  "pytest-asyncio>=0.23.0",
+  "pytest-cov>=6.0.0",
+  "pytest-timeout>=2.2.0",
+  "respx>=0.21.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pm"]
