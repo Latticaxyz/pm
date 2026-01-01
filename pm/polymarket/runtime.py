@@ -3,21 +3,22 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from .client import Polymarket
+from ._client import _Client
 from .config import PolymarketConfig
 from .resources.market import Market as MarketResource
 
 
 @dataclass
-class PolymarketAPI:
-    config: Optional[PolymarketConfig] = None
+class Polymarket:
+    _config: Optional[PolymarketConfig] = None
 
-    def __post__init__(self) -> None:
-        self._client = Polymarket(config=self.config)
+    def __post_init__(self) -> None:
+        self._client = _Client(config=self._config)
 
-    @property
-    def client(self) -> Polymarket:
-        return self._client
+    def set_config(self, config: PolymarketConfig) -> None:
+        old = self._client
+        self._client = _Client(config=config)
+        old.close()
 
     def Market(self, slug: str) -> MarketResource:
         return MarketResource(slug=slug, client=self._client)

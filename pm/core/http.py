@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import Any, Mapping, MutableMapping, Optional, Protocol
 
@@ -19,7 +20,7 @@ class Close(Protocol):
 
 
 class AClose(Protocol):
-    def aclose(self) -> None: ...
+    def aclose(self) -> Awaitable[None]: ...
 
 
 def merge_headers(
@@ -122,7 +123,7 @@ class HTTPClient:
             raise RateLimitError(
                 resp.status_code, "Rate limited", url=url, body_snippet=snippet
             )
-        if resp.status_code == (401, 403):
+        if resp.status_code in (401, 403):
             raise AuthError(
                 resp.status_code,
                 "Unauthorized/Forbidden",

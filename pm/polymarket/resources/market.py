@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 from pm.core import NotFoundError
-from ..client import Polymarket
+from .._client import _Client
 
 
 def _pick(d: dict[str, Any], *keys: str) -> str:
@@ -21,7 +21,7 @@ def _pick(d: dict[str, Any], *keys: str) -> str:
 @dataclass
 class Market:
     slug: str
-    client: Polymarket
+    client: _Client
 
     _market: Optional[dict[str, Any]] = None
     _event: Optional[dict[str, Any]] = None
