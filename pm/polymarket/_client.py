@@ -5,7 +5,7 @@ from .config import PolymarketConfig
 from .services import GammaService, ClobService
 
 
-class Polymarket:
+class _Client:
     def __init__(self, config: PolymarketConfig | None = None):
         self.config = config or PolymarketConfig()
 
