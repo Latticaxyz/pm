@@ -6,5 +6,18 @@ dist/
 wheels/
 *.egg-info
 
+# Pytest
+.pytest_cache
+
 # Virtual environments
 .venv
+
+# Misc
+.DS_Store
+
+# Environment files
+.env
+
+# Claude
+.claude/
+CLAUDE.md
