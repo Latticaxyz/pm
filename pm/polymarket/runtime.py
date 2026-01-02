@@ -25,6 +25,3 @@ class Polymarket:
 
     def close(self) -> None:
         self._client.close()
-
-    async def aclose(self) -> None:
-        await self._client.aclose()

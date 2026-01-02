@@ -13,15 +13,5 @@ class ClobService:
     def get_orderbook(self, token_id: str) -> dict[str, Any]:
         return self.http.get_json(CLOB_ORDERBOOK_PATH, params={"token_id": token_id})
 
-    async def aget_orderbook(self, token_id: str) -> dict[str, Any]:
-        return await self.http.aget_json(
-            CLOB_ORDERBOOK_PATH, params={"token_id": token_id}
-        )
-
     def get_trades(self, token_id: str, *, limit: int = 50) -> dict[str, Any]:
         return self.http.get_json(CLOB_TRADES_PATH, params={"token_id": token_id})
-
-    async def aget_trades(self, token_id: str, *, limit: int = 50) -> dict[str, Any]:
-        return await self.http.aget_json(
-            CLOB_TRADES_PATH, params={"token_id": token_id}
-        )
