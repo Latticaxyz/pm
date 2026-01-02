@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import asyncio
-from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import Any, Mapping, MutableMapping, Optional, Protocol
 
@@ -17,10 +15,6 @@ JSON = Any
 
 class Close(Protocol):
     def close(self) -> None: ...
-
-
-class AClose(Protocol):
-    def aclose(self) -> Awaitable[None]: ...
 
 
 def merge_headers(
@@ -63,7 +57,6 @@ class HTTPClient:
         )
 
         self._sync: Optional[httpx.Client] = None
-        self._async: Optional[httpx.AsyncClient] = None
 
     def _get_sync(self) -> httpx.Client:
         if self._sync is None:
@@ -79,29 +72,10 @@ class HTTPClient:
             )
         return self._sync
 
-    def _get_async(self) -> httpx.AsyncClient:
-        if self._async is None:
-            self._async = httpx.AsyncClient(
-                base_url=self.cfg.base_url.rstrip("/"),
-                timeout=httpx.Timeout(
-                    self.cfg.timeout_s, connect=self.cfg.connect_timeout_s
-                ),
-                proxy=self.cfg.proxy,
-                http2=self.cfg.http2,
-                headers=dict(self._default_headers),
-                follow_redirects=True,
-            )
-        return self._async
-
     def close(self) -> None:
         if self._sync is not None:
             self._sync.close()
             self._sync = None
-
-    async def aclose(self) -> None:
-        if self._async is not None:
-            await self._async.aclose()
-            self._async = None
 
     def _raise_for_status(self, resp: httpx.Response) -> None:
         if resp.status_code < 400:
@@ -181,58 +155,8 @@ class HTTPClient:
 
         raise RuntimeError("unreachable") from last_exc
 
-    async def arequest(
-        self,
-        method: str,
-        path: str,
-        *,
-        params: Params | None = None,
-        json: JSON = None,
-        headers: Headers | None = None,
-    ) -> httpx.Response:
-        client = self._get_async()
-        req_headers = merge_headers(self._default_headers, headers)
-
-        last_exc: Optional[BaseException] = None
-
-        for attempt in range(self._retry.cfg.max_retries + 1):
-            try:
-                resp = await client.request(
-                    method, path, params=params, json=json, headers=req_headers
-                )
-                if (
-                    self._retry.retryable_status(resp.status_code)
-                    and attempt < self._retry.cfg.max_retries
-                ):
-                    ra = self._retry.parse_retry_after(resp)
-                    wait = (
-                        ra if ra is not None else self._retry.backoff_seconds(attempt)
-                    )
-                    await asyncio.sleep(wait)
-                    continue
-
-                self._raise_for_status(resp)
-                return resp
-
-            except BaseException as e:
-                last_exc = e
-                if (
-                    not self._retry.retryable_exception(e)
-                    or attempt >= self._retry.cfg.max_retries
-                ):
-                    raise
-                await asyncio.sleep(self._retry.backoff_seconds(attempt))
-
-        raise RuntimeError("unreachable") from last_exc
-
     def get_json(
         self, path: str, *, params: Params | None = None, headers: Headers | None = None
     ) -> Any:
         resp = self.request("GET", path, params=params, headers=headers)
-        return resp.json()
-
-    async def aget_json(
-        self, path: str, *, params: Params | None = None, headers: Headers | None = None
-    ) -> Any:
-        resp = await self.arequest("GET", path, params=params, headers=headers)
         return resp.json()
