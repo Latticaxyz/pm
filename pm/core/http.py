@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TypeAlias, Mapping, MutableMapping, Optional, Protocol
+from typing import Any, TypeAlias, Mapping, MutableMapping, Optional, Protocol
 
 import httpx
 
@@ -11,10 +11,9 @@ from .retry import RetryConfig, RetryPolicy
 Headers = Mapping[str, str]
 Params = Mapping[str, str | int | float | bool | None]
 
-JSONScalar: TypeAlias = str | int | float | bool | None
-JSONValue: TypeAlias = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
-JSONArray: TypeAlias = list["JSONValue"]
-JSONObject: TypeAlias = dict[str, "JSONValue"]
+# Type this at the service layer
+# https://stackoverflow.com/questions/51291722/define-a-jsonable-type-using-mypy-pep-526
+JSON: TypeAlias = Any
 
 
 class Close(Protocol):
@@ -121,7 +120,7 @@ class HTTPClient:
         path: str,
         *,
         params: Params | None = None,
-        json: JSONValue | None = None,
+        json: JSON = None,
         headers: Headers | None = None,
     ) -> httpx.Response:
         client = self._get_sync()
@@ -161,6 +160,6 @@ class HTTPClient:
 
     def get_json(
         self, path: str, *, params: Params | None = None, headers: Headers | None = None
-    ) -> JSONValue:
+    ) -> JSON:
         resp = self.request("GET", path, params=params, headers=headers)
         return resp.json()
