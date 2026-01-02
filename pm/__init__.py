@@ -2,7 +2,7 @@ from importlib.metadata import version
 
 __version__ = version("lattica-pm")
 
-from .polymarket.runtime import Polymarket
+from .polymarket.client import Polymarket
 from .polymarket.config import PolymarketConfig
 
 polymarket = Polymarket()
