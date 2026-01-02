@@ -18,7 +18,3 @@ class _Client:
     def close(self) -> None:
         self._gamma_http.close()
         self._clob_http.close()
-
-    async def aclose(self) -> None:
-        await self._gamma_http.aclose()
-        await self._clob_http.aclose()
