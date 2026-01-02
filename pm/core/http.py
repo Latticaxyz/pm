@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Mapping, MutableMapping, Optional, Protocol
+from typing import TypeAlias, Mapping, MutableMapping, Optional, Protocol
 
 import httpx
 
@@ -9,8 +9,12 @@ from .errors import AuthError, HTTPError, NotFoundError, RateLimitError, ServerE
 from .retry import RetryConfig, RetryPolicy
 
 Headers = Mapping[str, str]
-Params = Mapping[str, Any]
-JSON = Any
+Params = Mapping[str, str | int | float | bool | None]
+
+JSONScalar: TypeAlias = str | int | float | bool | None
+JSONValue: TypeAlias = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
+JSONArray: TypeAlias = list["JSONValue"]
+JSONObject: TypeAlias = dict[str, "JSONValue"]
 
 
 class Close(Protocol):
@@ -117,7 +121,7 @@ class HTTPClient:
         path: str,
         *,
         params: Params | None = None,
-        json: JSON = None,
+        json: JSONValue | None = None,
         headers: Headers | None = None,
     ) -> httpx.Response:
         client = self._get_sync()
@@ -157,6 +161,6 @@ class HTTPClient:
 
     def get_json(
         self, path: str, *, params: Params | None = None, headers: Headers | None = None
-    ) -> Any:
+    ) -> JSONValue:
         resp = self.request("GET", path, params=params, headers=headers)
         return resp.json()
