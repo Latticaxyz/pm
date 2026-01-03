@@ -1,6 +1,6 @@
 DEFAULT_GAMMA_BASE_URL = "https://gamma-api.polymarket.com"
 DEFAULT_CLOB_BASE_URL = "https://clob.polymarket.com"
-DEAFULT_DATA_BASE_URL = "https://data-api.polymarket.com"
+DEFAULT_DATA_BASE_URL = "https://data-api.polymarket.com"
 DEFAULT_USER_AGENT = "pm/0.1"
 
 GAMMA_MARKETS_PATH = "/markets"
