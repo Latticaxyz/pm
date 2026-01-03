@@ -6,6 +6,7 @@ from pm.core import HTTPClientConfig, RetryConfig
 from .constants import (
     DEFAULT_CLOB_BASE_URL,
     DEFAULT_GAMMA_BASE_URL,
+    DEFAULT_DATA_BASE_URL,
     DEFAULT_USER_AGENT,
 )
 
@@ -35,6 +36,17 @@ class PolymarketConfig:
     def clob_http(self) -> HTTPClientConfig:
         return HTTPClientConfig(
             base_url=DEFAULT_CLOB_BASE_URL,
+            timeout_s=self.timeout_s,
+            connect_timeout_s=self.connect_timeout_s,
+            proxy=self.proxy,
+            http2=self.http2,
+            user_agent=self.user_agent,
+            retries=self.retries,
+        )
+
+    def data_http(self) -> HTTPClientConfig:
+        return HTTPClientConfig(
+            base_url=DEFAULT_DATA_BASE_URL,
             timeout_s=self.timeout_s,
             connect_timeout_s=self.connect_timeout_s,
             proxy=self.proxy,

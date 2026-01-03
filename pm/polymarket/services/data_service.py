@@ -1,0 +1,20 @@
+from __future__ import annotations
+
+from typing import Any
+
+from pm.core import HTTPClient
+from ..constants import DATA_OI_PATH
+
+
+class GammaService:
+    def __init__(self, http: HTTPClient):
+        self.http = http
+
+    def get_global_oi(self) -> dict[str, Any]:
+        return self.http.get_json(f"{DATA_OI_PATH}")
+
+    def get_market_oi(self, condition_id: str) -> dict[str, Any]:
+        data = self.http.get_json(DATA_OI_PATH, params={"market": condition_id})
+        if isinstance(data, list):
+            return data[0] if data else {}
+        return data
