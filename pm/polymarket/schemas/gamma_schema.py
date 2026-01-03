@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Required, TypedDict
+from typing import Required, TypeAlias, TypedDict
 
 
 class MarketRes(TypedDict, total=False):
@@ -103,11 +103,11 @@ class MarketRes(TypedDict, total=False):
     negRiskRequestID: str
     notificationsEnabled: bool
     score: int
-    imageOptimized: list[ImageOptimizedRes]
-    iconOptimized: list[IconOptimizedRes]
-    events: EventsListRes
-    categories: CategoriesListRes
-    tags: TagsListRes
+    imageOptimized: ImageOptimizedRes
+    iconOptimized: IconOptimizedRes
+    events: EventsRes
+    categories: CategoriesRes
+    tags: TagsRes
     creator: str
     ready: bool
     funded: bool
@@ -154,7 +154,7 @@ class MarketRes(TypedDict, total=False):
     eventStartTime: str
 
 
-MarketsListRes = list[MarketRes]
+MarketsRes: TypeAlias = list[MarketRes]
 
 
 class ImageOptimizedRes(TypedDict, total=False):
@@ -183,11 +183,11 @@ class IconOptimizedRes(TypedDict, total=False):
     relname: str
 
 
-FeaturedImageOptimizedRes = ImageOptimizedRes
+FeaturedImageOptimizedRes: TypeAlias = ImageOptimizedRes
 
-HeaderImageOptimizedRes = ImageOptimizedRes
+HeaderImageOptimizedRes: TypeAlias = ImageOptimizedRes
 
-ProfileImageOptimizedRes = ImageOptimizedRes
+ProfileImageOptimizedRes: TypeAlias = ImageOptimizedRes
 
 
 class ClobRewardsRes(TypedDict, total=False):
@@ -212,7 +212,7 @@ class CategoryRes(TypedDict, total=False):
     updatedAt: str
 
 
-CategoriesListRes = list[CategoryRes]
+CategoriesRes: TypeAlias = list[CategoryRes]
 
 
 class EventRes(TypedDict, total=False):
@@ -263,15 +263,15 @@ class EventRes(TypedDict, total=False):
     negRiskMarketID: str
     negRiskFeeBips: int
     commentCount: int
-    imageOptimized: list[ImageOptimizedRes]
-    iconOptimized: list[IconOptimizedRes]
-    featuredImageOptimized: list[FeaturedImageOptimizedRes]
+    imageOptimized: ImageOptimizedRes
+    iconOptimized: IconOptimizedRes
+    featuredImageOptimized: FeaturedImageOptimizedRes
     subEvents: list[str]
-    markets: MarketsListRes
-    series: SeriesListRes
-    categories: CategoriesListRes
-    collections: CollectionsListRes
-    tags: TagsListRes
+    markets: MarketsRes
+    series: SeriesRes
+    categories: CategoriesRes
+    collections: CollectionsRes
+    tags: TagsRes
     cyom: bool
     closedTime: str
     showAllOutcomes: bool
@@ -295,12 +295,12 @@ class EventRes(TypedDict, total=False):
     electionType: str
     eventCreators: list[EventCreatorRes]
     tweetCount: int
-    chats: ChatsListRes
+    chats: ChatsRes
     featuredOrder: int
     estimateValue: bool
     cantEstimate: bool
     estimatedValue: str
-    templates: TemplatesListRes
+    templates: TemplatesRes
     spreadsMainLine: float
     totalsMainLine: float
     carouselMap: str
@@ -312,7 +312,7 @@ class EventRes(TypedDict, total=False):
     requiresTranslation: bool
 
 
-EventsListRes = list[EventRes]
+EventsRes: TypeAlias = list[EventRes]
 
 
 class EventCreatorRes(TypedDict, total=False):
@@ -340,7 +340,7 @@ class TemplateRes(TypedDict, total=False):
     outcomes: str
 
 
-TemplatesListRes = list[TemplateRes]
+TemplatesRes: TypeAlias = list[TemplateRes]
 
 
 class CollectionRes(TypedDict, total=False):
@@ -374,7 +374,7 @@ class CollectionRes(TypedDict, total=False):
     headerImageOptimized: list[HeaderImageOptimizedRes]
 
 
-CollectionsListRes = list[CollectionRes]
+CollectionsRes: TypeAlias = list[CollectionRes]
 
 
 class TagRes(TypedDict):
@@ -390,7 +390,7 @@ class TagRes(TypedDict):
     requiresTranslation: bool
 
 
-TagsListRes = list[TagRes]
+TagsRes: TypeAlias = list[TagRes]
 
 
 class RelatedTagRes(TypedDict):
@@ -400,10 +400,10 @@ class RelatedTagRes(TypedDict):
     rank: int
 
 
-RelatedTagsListRes = list[RelatedTagRes]
+RelatedTagsRes: TypeAlias = list[RelatedTagRes]
 
 
-class SeriesRes(TypedDict, total=False):
+class SingleSeriesRes(TypedDict, total=False):
     id: Required[str]
     ticker: str
     slug: str
@@ -437,16 +437,16 @@ class SeriesRes(TypedDict, total=False):
     pythTokenID: str
     cgAssetName: str
     score: int
-    events: EventsListRes
-    collections: CollectionsListRes
-    categories: CategoriesListRes
-    tags: TagsListRes
+    events: EventsRes
+    collections: CollectionsRes
+    categories: CategoriesRes
+    tags: TagsRes
     commentCount: int
-    chats: ChatsListRes
+    chats: ChatsRes
     requiresTranslation: bool
 
 
-SeriesListRes = list
+SeriesRes: TypeAlias = list[SingleSeriesRes]
 
 
 class ProfileRes(TypedDict, total=False):
@@ -466,7 +466,7 @@ class ProfileRes(TypedDict, total=False):
     profileImageOptimized: ProfileImageOptimizedRes
 
 
-ProfileListRes = list[ProfileRes]
+ProfilesRes: TypeAlias = list[ProfileRes]
 
 
 class ProfilePositionRes(TypedDict, total=False):
@@ -490,7 +490,7 @@ class ChatRes(TypedDict, total=False):
     endTime: str
 
 
-ChatsListRes = list[ChatRes]
+ChatsRes: TypeAlias = list[ChatRes]
 
 
 class CommentRes(TypedDict, total=False):
@@ -504,12 +504,12 @@ class CommentRes(TypedDict, total=False):
     createdAt: str
     updatedAt: str
     profile: ProfileRes
-    reactions: ReactionsListRes
+    reactions: ReactionsRes
     reportCount: int
     reactionCount: int
 
 
-CommentsListRes = list[CommentRes]
+CommentsRes: TypeAlias = list[CommentRes]
 
 
 class ReactionRes(TypedDict, total=False):
@@ -522,4 +522,4 @@ class ReactionRes(TypedDict, total=False):
     profile: ProfileRes
 
 
-ReactionsListRes = list[ReactionRes]
+ReactionsRes: TypeAlias = list[ReactionRes]
