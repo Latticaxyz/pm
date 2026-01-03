@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Mapping, MutableMapping, Optional, Protocol
+from typing import Any, TypeAlias, Mapping, MutableMapping, Optional, Protocol
 
 import httpx
 
@@ -9,8 +9,11 @@ from .errors import AuthError, HTTPError, NotFoundError, RateLimitError, ServerE
 from .retry import RetryConfig, RetryPolicy
 
 Headers = Mapping[str, str]
-Params = Mapping[str, Any]
-JSON = Any
+Params = Mapping[str, str | int | float | bool | None]
+
+# Type this at the service layer
+# https://stackoverflow.com/questions/51291722/define-a-jsonable-type-using-mypy-pep-526
+JSON: TypeAlias = Any
 
 
 class Close(Protocol):
@@ -157,6 +160,6 @@ class HTTPClient:
 
     def get_json(
         self, path: str, *, params: Params | None = None, headers: Headers | None = None
-    ) -> Any:
+    ) -> JSON:
         resp = self.request("GET", path, params=params, headers=headers)
         return resp.json()
