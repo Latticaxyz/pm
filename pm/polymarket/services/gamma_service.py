@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
 from datetime import datetime
 
 from pm.core import HTTPClient
@@ -14,33 +13,33 @@ class GammaService:
 
     def list_markets(
         self,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
-        ascending: Optional[bool] = None,
-        id: Optional[list[int]] = None,
-        slug: Optional[list[str]] = None,
-        clob_token_ids: Optional[list[str]] = None,
-        condition_ids: Optional[list[str]] = None,
-        market_maker_address: Optional[list[str]] = None,
-        liquidity_num_min: Optional[float] = None,
-        liquidity_num_max: Optional[float] = None,
-        volume_num_min: Optional[float] = None,
-        volume_num_max: Optional[float] = None,
-        start_date_min: Optional[datetime] = None,
-        start_date_max: Optional[datetime] = None,
-        end_date_min: Optional[datetime] = None,
-        end_date_max: Optional[datetime] = None,
-        tag_id: Optional[int] = None,
-        related_tags: Optional[bool] = None,
-        cyom: Optional[bool] = None,
-        uma_resolution_status: Optional[str] = None,
-        game_id: Optional[str] = None,
-        sports_market_types: Optional[list[str]] = None,
-        rewards_min_size: Optional[float] = None,
-        question_ids: Optional[list[str]] = None,
-        include_tag: Optional[bool] = None,
-        closed: Optional[bool] = None,
+        limit: int | None = None,
+        offset: int | None = None,
+        order: str | None = None,
+        ascending: bool | None = None,
+        id: list[int] | None = None,
+        slug: list[str] | None = None,
+        clob_token_ids: list[str] | None = None,
+        condition_ids: list[str] | None = None,
+        market_maker_address: list[str] | None = None,
+        liquidity_num_min: float | None = None,
+        liquidity_num_max: float | None = None,
+        volume_num_min: float | None = None,
+        volume_num_max: float | None = None,
+        start_date_min: datetime | None = None,
+        start_date_max: datetime | None = None,
+        end_date_min: datetime | None = None,
+        end_date_max: datetime | None = None,
+        tag_id: int | None = None,
+        related_tags: bool | None = None,
+        cyom: bool | None = None,
+        uma_resolution_status: str | None = None,
+        game_id: str | None = None,
+        sports_market_types: list[str] | None = None,
+        rewards_min_size: float | None = None,
+        question_ids: list[str] | None = None,
+        include_tag: bool | None = None,
+        closed: bool | None = None,
     ) -> MarketsRes:
         params = {
             "limit": limit,
@@ -74,13 +73,13 @@ class GammaService:
         return self.http.get_json(GAMMA_MARKETS_PATH, params=params)
 
     def get_market_by_slug(
-        self, slug: str, include_tag: Optional[bool] = None
+        self, slug: str, include_tag: bool | None = None
     ) -> MarketRes:
         return self.http.get_json(
-            f"GAMMA_MARKETS_PATH/slug/{slug}", params={"include_tag": include_tag}
+            f"{GAMMA_MARKETS_PATH}/slug/{slug}", params={"include_tag": include_tag}
         )
 
-    def get_market_by_id(self, id: str, include_tag: Optional[bool]) -> MarketRes:
+    def get_market_by_id(self, id: str, include_tag: bool | None = None) -> MarketRes:
         return self.http.get_json(
             f"{GAMMA_MARKETS_PATH}/{id}", params={"include_tag": include_tag}
         )
@@ -91,32 +90,32 @@ class GammaService:
 
     def list_events(
         self,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
-        ascending: Optional[bool] = None,
-        id: Optional[list[int]] = None,
-        tag_id: Optional[int] = None,
-        exclude_tag_id: Optional[list[int]] = None,
-        slug: Optional[list[str]] = None,
-        tag_slug: Optional[str] = None,
-        related_tags: Optional[bool] = None,
-        active: Optional[bool] = None,
-        archived: Optional[bool] = None,
-        featured: Optional[bool] = None,
-        cyom: Optional[bool] = None,
-        include_chat: Optional[bool] = None,
-        include_template: Optional[bool] = None,
-        recurrence: Optional[str] = None,
-        closed: Optional[bool] = None,
-        liquidity_min: Optional[float] = None,
-        liquidity_max: Optional[float] = None,
-        volume_min: Optional[float] = None,
-        volume_max: Optional[float] = None,
-        start_date_min: Optional[datetime] = None,
-        start_date_max: Optional[datetime] = None,
-        end_date_min: Optional[datetime] = None,
-        end_date_max: Optional[datetime] = None,
+        limit: int | None = None,
+        offset: int | None = None,
+        order: str | None = None,
+        ascending: bool | None = None,
+        id: list[int] | None = None,
+        tag_id: int | None = None,
+        exclude_tag_id: list[int] | None = None,
+        slug: list[str] | None = None,
+        tag_slug: str | None = None,
+        related_tags: bool | None = None,
+        active: bool | None = None,
+        archived: bool | None = None,
+        featured: bool | None = None,
+        cyom: bool | None = None,
+        include_chat: bool | None = None,
+        include_template: bool | None = None,
+        recurrence: str | None = None,
+        closed: bool | None = None,
+        liquidity_min: float | None = None,
+        liquidity_max: float | None = None,
+        volume_min: float | None = None,
+        volume_max: float | None = None,
+        start_date_min: datetime | None = None,
+        start_date_max: datetime | None = None,
+        end_date_min: datetime | None = None,
+        end_date_max: datetime | None = None,
     ) -> EventsRes:
         params = {
             "limit": limit,
@@ -151,8 +150,8 @@ class GammaService:
     def get_event_by_id(
         self,
         id: str,
-        include_chat: Optional[bool] = None,
-        include_template: Optional[bool] = None,
+        include_chat: bool | None = None,
+        include_template: bool | None = None,
     ) -> EventRes:
         return self.http.get_json(
             f"{GAMMA_EVENTS_PATH}/{id}",
@@ -162,8 +161,8 @@ class GammaService:
     def get_event_by_slug(
         self,
         slug: str,
-        include_chat: Optional[bool] = None,
-        include_template: Optional[bool] = None,
+        include_chat: bool | None = None,
+        include_template: bool | None = None,
     ) -> EventRes:
         return self.http.get_json(
             f"{GAMMA_EVENTS_PATH}/slug/{slug}",

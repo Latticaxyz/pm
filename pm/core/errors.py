@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 class pmError(Exception):
@@ -12,8 +11,8 @@ class pmError(Exception):
 class HTTPError(pmError):
     status_code: int
     message: str = "HTTP error"
-    url: Optional[str] = None
-    body_snippet: Optional[str] = None
+    url: str | None = None
+    body_snippet: str | None = None
 
     def __str__(self) -> str:
         base = f"{self.status_code}: {self.message}"

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
-from typing import Optional
 
 import httpx
 
@@ -40,7 +39,7 @@ class RetryPolicy:
         capped = min(self.cfg.backoff_cap_s, base)
         return capped + random.random() * self.cfg.jitter_s
 
-    def parse_retry_after(self, resp: httpx.Response) -> Optional[float]:
+    def parse_retry_after(self, resp: httpx.Response) -> float | None:
         ra = resp.headers.get("retry-after")
         if not ra:
             return None

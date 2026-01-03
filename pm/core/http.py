@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, TypeAlias, Mapping, MutableMapping, Optional, Protocol
+from typing import Any, TypeAlias, Mapping, MutableMapping, Protocol
 
 import httpx
 
@@ -9,7 +9,7 @@ from .errors import AuthError, HTTPError, NotFoundError, RateLimitError, ServerE
 from .retry import RetryConfig, RetryPolicy
 
 Headers = Mapping[str, str]
-Params = Mapping[str, str | int | float | bool | None]
+Params = Mapping[str, str | int | float | bool | list[int] | list[str] | None]
 
 # Type this at the service layer
 # https://stackoverflow.com/questions/51291722/define-a-jsonable-type-using-mypy-pep-526
@@ -42,7 +42,7 @@ class HTTPClientConfig:
     base_url: str
     timeout_s: float = 20.0
     connect_timeout_s: float = 5.0
-    proxy: Optional[str] = None
+    proxy: str | None = None
     http2: bool = False
     user_agent: str = "pm/0.1"
     retries: RetryConfig = RetryConfig()
@@ -59,7 +59,7 @@ class HTTPClient:
             {"User-Agent": cfg.user_agent}, default_headers
         )
 
-        self._sync: Optional[httpx.Client] = None
+        self._sync: httpx.Client | None = None
 
     def _get_sync(self) -> httpx.Client:
         if self._sync is None:
@@ -126,7 +126,7 @@ class HTTPClient:
         client = self._get_sync()
         req_headers = merge_headers(self._default_headers, headers)
 
-        last_exc: Optional[BaseException] = None
+        last_exc: BaseException | None = None
 
         for attempt in range(self._retry.cfg.max_retries + 1):
             try:

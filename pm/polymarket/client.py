@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 from pm.core import HTTPClient
 
@@ -11,7 +10,7 @@ from .services import ClobService, GammaService, DataService
 
 @dataclass
 class Polymarket:
-    _config: Optional[PolymarketConfig] = None
+    _config: PolymarketConfig | None = None
 
     def __post_init__(self) -> None:
         self._build(self._config)
