@@ -21,3 +21,6 @@ wheels/
 # Claude
 .claude/
 CLAUDE.md
+
+# Testing
+responses/
