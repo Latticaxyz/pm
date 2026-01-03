@@ -29,7 +29,7 @@ class Polymarket:
     def set_config(self, config: PolymarketConfig) -> None:
         old_gamma = getattr(self, "_gamma_http", None)
         old_clob = getattr(self, "_clob_http", None)
-        old_data = getattr(self, "_clob_data", None)
+        old_data = getattr(self, "_data_http", None)
 
         self._build(config)
 
