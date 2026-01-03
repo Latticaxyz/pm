@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pm.core import HTTPClient
 from ..constants import GAMMA_EVENTS_PATH, GAMMA_MARKETS_PATH
-from ..schemas.gamma_schema import MarketRes, MarketsRes, EventRes, EventsRes
+from ..models import MarketRes, MarketsRes, EventRes, EventsRes
 
 
 class GammaService:
