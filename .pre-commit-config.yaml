@@ -75,7 +75,6 @@ repos:
           - --format=screen
           - --severity-level=low
           - --confidence-level=low
-          - --skip=B101,B311
           - pm/
         types: [python]
         exclude: ^tests/
