@@ -97,10 +97,9 @@ repos:
   # Tests
   - repo: local
     hooks:
-      # Unit tests
       - id: pytest
         name: pytest
-        entry: uv run pytest
+        entry: bash -c 'uv run pytest || [ $? -eq 5 ]'
         language: system
         pass_filenames: false
         stages: [pre-push]
