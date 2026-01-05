@@ -4,9 +4,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from pm.core import HTTPClient
-
-from .config import PolymarketConfig
-from .handlers import ClobHandler, DataHandler, GammaHandler
+from pm.polymarket.api.handlers import ClobHandler, DataHandler, GammaHandler
+from pm.polymarket.config import PolymarketConfig
 
 if TYPE_CHECKING:
     from .market import Market  # noqa: F401
