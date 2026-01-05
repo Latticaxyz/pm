@@ -9,7 +9,7 @@ from .errors import (
 
 from .retry import RetryConfig, RetryPolicy
 from .http import HTTPClient, HTTPClientConfig
-from .utils import pick, maybe_float, parse_json_list_str
+from .utils import pick, maybe_float, parse_json_list_str, as_dict
 
 __all__ = [
     "pmError",
@@ -25,4 +25,5 @@ __all__ = [
     "pick",
     "maybe_float",
     "parse_json_list_str",
+    "as_dict",
 ]

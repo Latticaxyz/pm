@@ -49,3 +49,7 @@ def parse_json_list_str(v: Any) -> list[str]:
                 return []
         return [s]
     return []
+
+
+def as_dict(x: Any) -> dict[str, Any]:
+    return dict(x) if isinstance(x, dict) else {}
