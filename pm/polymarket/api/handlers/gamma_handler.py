@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import datetime
 
 from pm.core import HTTPClient
-from ..constants import GAMMA_EVENTS_PATH, GAMMA_MARKETS_PATH
-from ..sources import MarketRes, MarketsRes, EventRes, EventsRes
+from pm.polymarket.constants import GAMMA_EVENTS_PATH, GAMMA_MARKETS_PATH
+from pm.polymarket.api.sources import MarketRes, MarketsRes, EventRes, EventsRes
 
 
 class GammaHandler:

@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 from pm.core import HTTPClient
-from pm.polymarket.sources import OrderBookSummaryRes
-from ..constants import CLOB_ORDERBOOK_PATH, CLOB_TRADES_PATH
+from pm.polymarket.api.sources import OrderBookSummaryRes
+from pm.polymarket.constants import CLOB_ORDERBOOK_PATH, CLOB_TRADES_PATH
 
 
 class ClobHandler:
