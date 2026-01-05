@@ -4,10 +4,10 @@ from datetime import datetime
 
 from pm.core import HTTPClient
 from ..constants import GAMMA_EVENTS_PATH, GAMMA_MARKETS_PATH
-from ..models import MarketRes, MarketsRes, EventRes, EventsRes
+from ..sources import MarketRes, MarketsRes, EventRes, EventsRes
 
 
-class GammaService:
+class GammaHandler:
     def __init__(self, http: HTTPClient):
         self.http = http
 
