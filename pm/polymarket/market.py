@@ -1,69 +1,133 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import TypedDict
 
-from .client import Polymarket
+from pm.polymarket.api.sources import MarketRes
 
-from pm.core import NotFoundError
+from pm.polymarket.client import Polymarket
+
+from pm.core import pick, maybe_float, parse_json_list_str, NotFoundError
 
 
-def _pick(d: dict[str, Any], *keys: str) -> str:
-    for k in keys:
-        v = d.get(k)
-        if v is None:
-            continue
-        s = str(v)
-        if s:
-            return s
-    return ""
+class MarketInfo(TypedDict):
+    id: str | None
+    slug: str | None
+    condition_id: str | None
+    token_ids: list[str] | None
+    outcomes: list[str] | None
+    outcome_prices: list[float] | None
+    last_trade_price: float | None
+    best_bid: float | None
+    best_ask: float | None
 
 
 @dataclass
 class Market:
-    slug: str
     client: "Polymarket"
+    id: str | None = None
+    slug: str | None = None
 
-    _market: Optional[dict[str, Any]] = None
-    _event: Optional[dict[str, Any]] = None
+    _market: MarketRes | None = None
 
-    def _ensure_market(self) -> dict[str, Any]:
-        if self._market is None:
+    def __post_init__(self) -> None:
+        if not self.slug and not self.id:
+            raise ValueError("Market requires either slug or id!")
+
+    @classmethod
+    def from_api_response(cls, *, client: "Polymarket", market: MarketRes) -> "Market":
+        slug = pick(market, "slug", "market_slug", "marketSlug") or None
+        mid = pick(market, "id", "marketId", "market_id") or None
+        return cls(client=client, slug=slug, id=mid, _market=market)
+
+    def _load_market(self) -> MarketRes:
+        if self._market is not None:
+            return self._market
+
+        if self.slug:
             data = self.client.gamma.get_market_by_slug(self.slug)
+            if data:
+                self._market = data
+                return data
+
+            if self.id:
+                data2 = self.client.gamma.get_market_by_id(self.id)
+                if data2:
+                    self._market = data2
+                    return data2
+                raise ValueError(
+                    f"Market not found for slug={self.slug!r} or id={self.id!r}"
+                )
+
+            raise NotFoundError(404, "Market not found", url=f"(slug={self.slug})")
+
+        if self.id:
+            data = self.client.gamma.get_market_by_id(self.id)
             if not data:
-                raise NotFoundError(404, "Market not found", url=f"(slug={self.slug})")
+                raise NotFoundError(404, "Market not found", url=f"(id={self.id})")
             self._market = data
-        return self._market
+            return data
+
+        # This should be unreachable from __post_init__
+        raise ValueError("Market requires either slug or id!")
 
     @property
-    def info(self) -> dict[str, Any]:
-        return self._ensure_market()
+    def raw(self) -> MarketRes:
+        return self._load_market()
+
+    @property
+    def info(self) -> MarketInfo:
+        self._load_market()
+        return {
+            "id": self.market_id,
+            "slug": self.slug,
+            "condition_id": self.condition_id,
+            "token_ids": self.token_ids,
+            "outcomes": self.outcomes,
+            "outcome_prices": self.prices,
+            "last_trade_price": self.price,
+            "best_bid": self.best_bid,
+            "best_ask": self.best_ask,
+        }
 
     @property
     def market_id(self) -> str:
-        m = self._ensure_market()
-        return _pick(m, "id", "marketId", "market_id")
+        return pick(self._load_market(), "id", "market_id", "marketId")
 
     @property
-    def event_id(self) -> str:
-        m = self._ensure_market()
-        return _pick(m, "eventId", "event_id")
+    def condition_id(self) -> str:
+        return pick(self._load_market(), "condition_id")
 
     @property
-    def token_id(self) -> str:
-        m = self._ensure_market()
-        return _pick(m, "tokenId", "token_id")
+    def token_ids(self) -> list[str]:
+        return parse_json_list_str(self._load_market().get("clobTokenIds"))
 
-    def event(self) -> dict[str, Any]:
-        if self._event is None:
-            eid = self.event_id
-            if not eid:
-                return {}
-            self._event = self.client.gamma.get_event(eid)
-        return self._event
+    @property
+    def outcomes(self) -> list[str]:
+        return parse_json_list_str(self._load_market().get("outcomes"))
 
-    def orderbook(self) -> dict[str, Any]:
-        tid = self.token_id
-        if not tid:
-            return {}
-        return self.client.clob.get_orderbook(tid)
+    @property
+    def prices(self) -> list[float]:
+        raw = parse_json_list_str(self._load_market().get("outcomePrices"))
+        out: list[float] = []
+        for x in raw:
+            fx = maybe_float(x)
+            if fx is not None:
+                out.append(fx)
+        return out
+
+    @property
+    def price(self) -> float | None:
+        ltp = maybe_float(self._load_market().get("lastTradePrice"))
+        if ltp is not None:
+            return ltp
+        ps = self.prices
+        return ps[0] if ps else None
+
+    @property
+    def best_bid(self) -> float | None:
+        return maybe_float(self._load_market().get("best_bid"))
+
+    @property
+    def best_ask(self) -> float | None:
+        return maybe_float(self._load_market().get("best_ask"))

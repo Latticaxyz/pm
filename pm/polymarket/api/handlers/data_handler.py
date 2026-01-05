@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 from pm.core import HTTPClient
-from ..constants import DATA_OI_PATH
+from pm.polymarket.constants import DATA_OI_PATH
 
 
-class GammaService:
+class DataHandler:
     def __init__(self, http: HTTPClient):
         self.http = http
 
