@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pm.core import HTTPClient
 
 from .config import PolymarketConfig
-from .services import ClobService, GammaService, DataService
+from .handlers import ClobHandler, GammaHandler, DataHandler
 
 
 @dataclass
@@ -22,9 +22,9 @@ class Polymarket:
         self._clob_http = HTTPClient(self.config.clob_http())
         self._data_http = HTTPClient(self.config.data_http())
 
-        self.gamma = GammaService(self._gamma_http)
-        self.clob = ClobService(self._clob_http)
-        self.data = DataService(self._data_http)
+        self.gamma = GammaHandler(self._gamma_http)
+        self.clob = ClobHandler(self._clob_http)
+        self.data = DataHandler(self._data_http)
 
     def set_config(self, config: PolymarketConfig) -> None:
         old_gamma = getattr(self, "_gamma_http", None)
