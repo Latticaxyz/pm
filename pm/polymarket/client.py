@@ -1,16 +1,28 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from pm.core import HTTPClient
 
 from .config import PolymarketConfig
-from .handlers import ClobHandler, GammaHandler, DataHandler
+from .handlers import ClobHandler, DataHandler, GammaHandler
+
+if TYPE_CHECKING:
+    from .market import Market  # noqa: F401
 
 
 @dataclass
 class Polymarket:
     _config: PolymarketConfig | None = None
+
+    config: PolymarketConfig = field(init=False)
+    gamma: GammaHandler = field(init=False)
+    clob: ClobHandler = field(init=False)
+    data: DataHandler = field(init=False)
+    _gamma_http: HTTPClient = field(init=False)
+    _clob_http: HTTPClient = field(init=False)
+    _data_http: HTTPClient = field(init=False)
 
     def __post_init__(self) -> None:
         self._build(self._config)
@@ -40,7 +52,7 @@ class Polymarket:
         if old_data is not None:
             old_data.close()
 
-    def Market(self, slug: str):
+    def Market(self, slug: str) -> "Market":  # noqa: F811
         from .market import Market
 
         return Market(slug=slug, client=self)

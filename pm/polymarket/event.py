@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+from pm.polymarket.api.sources import EventRes
 from pm.polymarket.client import Polymarket
 
 # from pm.core import pick, maybe_float, parse_json_list_str, NotFoundError
-
-from pm.polymarket.api.sources import EventRes
 
 
 class Event:

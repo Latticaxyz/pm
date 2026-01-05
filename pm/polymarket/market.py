@@ -3,11 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TypedDict
 
+from pm.core import NotFoundError, maybe_float, parse_json_list_str, pick
 from pm.polymarket.api.sources import MarketRes
-
 from pm.polymarket.client import Polymarket
-
-from pm.core import pick, maybe_float, parse_json_list_str, NotFoundError
 
 
 class MarketInfo(TypedDict):
@@ -45,13 +43,13 @@ class Market:
             return self._market
 
         if self.slug:
-            data = self.client.gamma.get_market_by_slug(self.slug)
+            data: MarketRes = self.client.gamma.get_market_by_slug(self.slug)
             if data:
                 self._market = data
                 return data
 
             if self.id:
-                data2 = self.client.gamma.get_market_by_id(self.id)
+                data2: MarketRes = self.client.gamma.get_market_by_id(self.id)
                 if data2:
                     self._market = data2
                     return data2
@@ -62,11 +60,11 @@ class Market:
             raise NotFoundError(404, "Market not found", url=f"(slug={self.slug})")
 
         if self.id:
-            data = self.client.gamma.get_market_by_id(self.id)
-            if not data:
+            data3: MarketRes = self.client.gamma.get_market_by_id(self.id)
+            if not data3:
                 raise NotFoundError(404, "Market not found", url=f"(id={self.id})")
-            self._market = data
-            return data
+            self._market = data3
+            return data3
 
         # This should be unreachable from __post_init__
         raise ValueError("Market requires either slug or id!")

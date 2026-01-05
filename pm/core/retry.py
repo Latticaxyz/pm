@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
+from typing import cast
 
 import httpx
 
@@ -37,7 +38,8 @@ class RetryPolicy:
     def backoff_seconds(self, attempt: int) -> float:
         base = self.cfg.backoff_base_s * (2**attempt)
         capped = min(self.cfg.backoff_cap_s, base)
-        return capped + random.random() * self.cfg.jitter_s
+        jitter = random.random() * self.cfg.jitter_s
+        return cast(float, capped + jitter)
 
     def parse_retry_after(self, resp: httpx.Response) -> float | None:
         ra = resp.headers.get("retry-after")
