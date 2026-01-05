@@ -45,7 +45,7 @@ build-backend = "hatchling.build"
 packages = ["pm"]
 
 [tool.isort]
-profile = "ruff"
+profile = "black"
 line_length = 120
 skip_glob = ["**/.venv/**", "**/build/**", "**/dist/**"]
 
