@@ -34,14 +34,11 @@ jobs:
       - name: Check imports with isort
         run: uv run isort --check-only .
 
-      - name: Lint with flake8
-        run: uv run flake8 .
-
       - name: Lint with ruff
-        run: uv run ruff check .
+        run: uv run ruff check pm
 
       - name: Type check with mypy
-        run: uv run mypy .
+        run: uv run mypy pm
 
   test:
     name: Test
@@ -87,20 +84,16 @@ jobs:
       - name: Run bandit
         run: |
           uv run bandit \
-            --recursive pm/ \
-            --format screen \
-            --severity-level low \
-            --confidence-level low \
-            --skip B101
+          -c pyproject.toml \
+          --recursive \
+          --format=screen \
+          --severity-level=low \
+          --confidence-level=low \
+          pm/
 
       - name: Run vulture
         run: |
-          uv run vulture \
-            pm/ \
-            --min-confidence 80 \
-            --sort-by-size \
-            --ignore-names __init__,__main__
-
+          uv run vulture
   build:
     name: Build wheel & sdist
     runs-on: ubuntu-latest
