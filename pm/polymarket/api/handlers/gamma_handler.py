@@ -75,22 +75,16 @@ class GammaHandler:
         }
         return cast(MarketsRes, self.http.get_json(GAMMA_MARKETS_PATH, params=params))
 
-    def get_market_by_slug(
-        self, slug: str, include_tag: bool | None = None
-    ) -> MarketRes:
+    def get_market_by_slug(self, slug: str, include_tag: bool | None = None) -> MarketRes:
         return cast(
             MarketRes,
-            self.http.get_json(
-                f"{GAMMA_MARKETS_PATH}/slug/{slug}", params={"include_tag": include_tag}
-            ),
+            self.http.get_json(f"{GAMMA_MARKETS_PATH}/slug/{slug}", params={"include_tag": include_tag}),
         )
 
     def get_market_by_id(self, id: str, include_tag: bool | None = None) -> MarketRes:
         return cast(
             MarketRes,
-            self.http.get_json(
-                f"{GAMMA_MARKETS_PATH}/{id}", params={"include_tag": include_tag}
-            ),
+            self.http.get_json(f"{GAMMA_MARKETS_PATH}/{id}", params={"include_tag": include_tag}),
         )
 
     def get_market_tags(self) -> None:

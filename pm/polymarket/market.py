@@ -53,9 +53,7 @@ class Market:
                 if data2:
                     self._market = data2
                     return data2
-                raise ValueError(
-                    f"Market not found for slug={self.slug!r} or id={self.id!r}"
-                )
+                raise ValueError(f"Market not found for slug={self.slug!r} or id={self.id!r}")
 
             raise NotFoundError(404, "Market not found", url=f"(slug={self.slug})")
 

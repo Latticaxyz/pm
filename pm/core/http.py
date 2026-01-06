@@ -20,9 +20,7 @@ class Close(Protocol):
     def close(self) -> None: ...
 
 
-def merge_headers(
-    base: Headers | None, extra: Headers | None
-) -> MutableMapping[str, str]:
+def merge_headers(base: Headers | None, extra: Headers | None) -> MutableMapping[str, str]:
     out: MutableMapping[str, str] = {}
     if base:
         out.update(base)
@@ -49,15 +47,11 @@ class HTTPClientConfig:
 
 
 class HTTPClient:
-    def __init__(
-        self, cfg: HTTPClientConfig, *, default_headers: Headers | None = None
-    ):
+    def __init__(self, cfg: HTTPClientConfig, *, default_headers: Headers | None = None):
         self.cfg = cfg
         self._retry = RetryPolicy(cfg.retries)
 
-        self._default_headers = merge_headers(
-            {"User-Agent": cfg.user_agent}, default_headers
-        )
+        self._default_headers = merge_headers({"User-Agent": cfg.user_agent}, default_headers)
 
         self._sync: httpx.Client | None = None
 
@@ -65,9 +59,7 @@ class HTTPClient:
         if self._sync is None:
             self._sync = httpx.Client(
                 base_url=self.cfg.base_url.rstrip("/"),
-                timeout=httpx.Timeout(
-                    self.cfg.timeout_s, connect=self.cfg.connect_timeout_s
-                ),
+                timeout=httpx.Timeout(self.cfg.timeout_s, connect=self.cfg.connect_timeout_s),
                 proxy=self.cfg.proxy,
                 http2=self.cfg.http2,
                 headers=dict(self._default_headers),
@@ -97,9 +89,7 @@ class HTTPClient:
         if resp.status_code == 404:
             raise NotFoundError(resp.status_code, msg, url=url, body_snippet=snippet)
         if resp.status_code == 429:
-            raise RateLimitError(
-                resp.status_code, "Rate limited", url=url, body_snippet=snippet
-            )
+            raise RateLimitError(resp.status_code, "Rate limited", url=url, body_snippet=snippet)
         if resp.status_code in (401, 403):
             raise AuthError(
                 resp.status_code,
@@ -108,9 +98,7 @@ class HTTPClient:
                 body_snippet=snippet,
             )
         if resp.status_code >= 500:
-            raise ServerError(
-                resp.status_code, "Upstream error", url=url, body_snippet=snippet
-            )
+            raise ServerError(resp.status_code, "Upstream error", url=url, body_snippet=snippet)
 
         raise HTTPError(resp.status_code, msg, url=url, body_snippet=snippet)
 
@@ -130,17 +118,10 @@ class HTTPClient:
 
         for attempt in range(self._retry.cfg.max_retries + 1):
             try:
-                resp = client.request(
-                    method, path, params=params, json=json, headers=req_headers
-                )
-                if (
-                    self._retry.retryable_status(resp.status_code)
-                    and attempt < self._retry.cfg.max_retries
-                ):
+                resp = client.request(method, path, params=params, json=json, headers=req_headers)
+                if self._retry.retryable_status(resp.status_code) and attempt < self._retry.cfg.max_retries:
                     ra = self._retry.parse_retry_after(resp)
-                    wait = (
-                        ra if ra is not None else self._retry.backoff_seconds(attempt)
-                    )
+                    wait = ra if ra is not None else self._retry.backoff_seconds(attempt)
                     time_sleep(wait)
                     continue
 
@@ -149,17 +130,12 @@ class HTTPClient:
 
             except BaseException as e:
                 last_exc = e
-                if (
-                    not self._retry.retryable_exception(e)
-                    or attempt >= self._retry.cfg.max_retries
-                ):
+                if not self._retry.retryable_exception(e) or attempt >= self._retry.cfg.max_retries:
                     raise
                 time_sleep(self._retry.backoff_seconds(attempt))
 
         raise RuntimeError("unreachable") from last_exc
 
-    def get_json(
-        self, path: str, *, params: Params | None = None, headers: Headers | None = None
-    ) -> JSON:
+    def get_json(self, path: str, *, params: Params | None = None, headers: Headers | None = None) -> JSON:
         resp = self.request("GET", path, params=params, headers=headers)
         return resp.json()
