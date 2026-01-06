@@ -295,7 +295,7 @@ wheels = [
 
 [[package]]
 name = "lattica-pm"
-version = "0.0.1"
+version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
@@ -340,30 +340,30 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "httpx", specifier = ">=0.27.0" },
-    { name = "pandas", specifier = ">=2.0.0" },
+    { name = "httpx", specifier = ">=0.27" },
+    { name = "pandas", specifier = ">=2" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "bandit", specifier = ">=1.8.6" },
-    { name = "black", specifier = ">=25.9.0" },
-    { name = "isort", specifier = ">=7.0.0" },
+    { name = "black", specifier = ">=25.9" },
+    { name = "isort", specifier = ">=7" },
     { name = "mypy", specifier = ">=1.18.2" },
     { name = "pre-commit", specifier = ">=4.5.1" },
     { name = "pytest", specifier = ">=8.4.2" },
-    { name = "pytest-asyncio", specifier = ">=0.23.0" },
-    { name = "pytest-cov", specifier = ">=6.0.0" },
-    { name = "pytest-timeout", specifier = ">=2.2.0" },
-    { name = "respx", specifier = ">=0.21.0" },
+    { name = "pytest-asyncio", specifier = ">=0.23" },
+    { name = "pytest-cov", specifier = ">=6" },
+    { name = "pytest-timeout", specifier = ">=2.2" },
+    { name = "respx", specifier = ">=0.21" },
     { name = "ruff", specifier = ">=0.14.3" },
     { name = "tombi", specifier = ">=0.7.14" },
     { name = "types-requests", specifier = ">=2.32.4.20250913" },
     { name = "vulture", specifier = ">=2.14" },
 ]
 lint = [
-    { name = "black", specifier = ">=25.9.0" },
-    { name = "isort", specifier = ">=7.0.0" },
+    { name = "black", specifier = ">=25.9" },
+    { name = "isort", specifier = ">=7" },
     { name = "mypy", specifier = ">=1.18.2" },
     { name = "ruff", specifier = ">=0.14.3" },
     { name = "types-requests", specifier = ">=2.32.4.20250913" },
@@ -374,10 +374,10 @@ security = [
 ]
 test = [
     { name = "pytest", specifier = ">=8.4.2" },
-    { name = "pytest-asyncio", specifier = ">=0.23.0" },
-    { name = "pytest-cov", specifier = ">=6.0.0" },
-    { name = "pytest-timeout", specifier = ">=2.2.0" },
-    { name = "respx", specifier = ">=0.21.0" },
+    { name = "pytest-asyncio", specifier = ">=0.23" },
+    { name = "pytest-cov", specifier = ">=6" },
+    { name = "pytest-timeout", specifier = ">=2.2" },
+    { name = "respx", specifier = ">=0.21" },
 ]
 
 [[package]]
