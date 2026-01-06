@@ -1,24 +1,22 @@
 from __future__ import annotations
 
 from .clob_source import (
-    OrderBookSummaryRes,
-    OrderBooksSummariesRes,
-    OrderBookHistoryRes,
-    PriceRes,
-    SideToPriceRes,
     MidpointRes,
+    OrderBookHistoryRes,
+    OrderBooksSummariesRes,
+    OrderBookSummaryRes,
+    PriceRes,
     PricesHistoryRes,
+    SideToPriceRes,
     SpreadsRes,
 )
-
-from .gamma_source import MarketRes, MarketsRes, EventRes, EventsRes
-
 from .data_source import (
-    TradesRes,
-    TopHoldersRes,
-    OpenInterestListRes,
     LiveVolumeListRes,
+    OpenInterestListRes,
+    TopHoldersRes,
+    TradesRes,
 )
+from .gamma_source import EventRes, EventsRes, MarketRes, MarketsRes
 
 __all__ = [
     # Clob

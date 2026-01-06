@@ -1,0 +1,88 @@
+default_stages: [pre-commit, pre-push]
+
+repos:
+  # pre-commit utility hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+
+  # formatters
+  - repo: https://github.com/PyCQA/isort
+    rev: 7.0.0
+    hooks:
+      - id: isort
+        language: system
+        entry: uv run isort
+        types: [python]
+
+  - repo: https://github.com/psf/black
+    rev: 25.11.0
+    hooks:
+      - id: black
+        language: system
+        entry: uv run black
+        types: [python]
+
+  # linters
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.4
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        language: system
+        entry: uv run ruff check
+        pass_filenames: false
+        types: [python]
+
+  # type checker
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
+      - id: mypy
+        language: system
+        entry: uv run mypy pm
+        pass_filenames: false
+        types: [python]
+
+  # security
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        entry: uv run bandit
+        args:
+          - -c
+          - pyproject.toml
+          - --recursive
+          - --format=screen
+          - --severity-level=low
+          - --confidence-level=low
+          - pm/
+        pass_filenames: false
+        types: [python]
+
+  # dead code
+  - repo: https://github.com/jendrikseipp/vulture
+    rev: v2.14
+    hooks:
+      - id: vulture
+        language: system
+        entry: uv run vulture
+        pass_filenames: false
+        types: [python]
+
+  # tests
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: bash -c 'uv run pytest'
+        language: system
+        pass_filenames: false
+        stages: [pre-push]

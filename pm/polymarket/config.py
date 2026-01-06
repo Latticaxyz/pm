@@ -3,10 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from pm.core import HTTPClientConfig, RetryConfig
+
 from .constants import (
     DEFAULT_CLOB_BASE_URL,
-    DEFAULT_GAMMA_BASE_URL,
     DEFAULT_DATA_BASE_URL,
+    DEFAULT_GAMMA_BASE_URL,
     DEFAULT_USER_AGENT,
 )
 

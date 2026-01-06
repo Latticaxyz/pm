@@ -9,6 +9,12 @@ wheels/
 # Pytest
 .pytest_cache
 
+# Ruff
+.ruff_cache
+
+# Mypy
+.mypy_cache
+
 # Virtual environments
 .venv
 
