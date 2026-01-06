@@ -69,6 +69,7 @@ line_length = 120
 [tool.mypy]
 python_version = "3.11"
 strict = true
+files = ["pm"]
 exclude = ['\.venv', "build", "dist", '\.eggs']
 
 [[tool.mypy.overrides]]
