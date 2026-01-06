@@ -64,7 +64,7 @@ repos:
           - --severity-level=low
           - --confidence-level=low
           - pm/
-        pass_filesnames: false
+        pass_filenames: false
         types: [python]
 
   # dead code
