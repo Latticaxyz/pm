@@ -1,7 +1,7 @@
 default_stages: [pre-commit, pre-push]
 
 repos:
-  # Pre-commit utility hooks
+  # pre-commit utility hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -12,7 +12,7 @@ repos:
       - id: trailing-whitespace
       - id: mixed-line-ending
 
-  # Formatters
+  # formatters
   - repo: https://github.com/PyCQA/isort
     rev: 7.0.0
     hooks:
@@ -29,16 +29,7 @@ repos:
         entry: uv run black
         types: [python]
 
-  # Linters
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.3.0
-    hooks:
-      - id: flake8
-        language: system
-        entry: uv run flake8
-        args: ["--max-line-length=120", "--extend-ignore=E203,D,B008"]
-        types: [python]
-
+  # linters
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.4
     hooks:
@@ -46,59 +37,52 @@ repos:
         name: ruff check
         language: system
         entry: uv run ruff check
+        pass_filenames: false
         types: [python]
 
-  # Type checker
+  # type checker
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.11.2
     hooks:
       - id: mypy
         language: system
-        entry: uv run mypy
-        args:
-          - --strict
-          - --ignore-missing-imports
-          - --show-error-codes
-          - --no-warn-unused-ignores
-          - --python-version=3.11
-        exclude: ^tests/
+        entry: uv run mypy .
+        pass_filenames: false
         types: [python]
 
-  # Security
+  # security
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.6
     hooks:
       - id: bandit
         entry: uv run bandit
         args:
+          - -c
+          - pyproject.toml
           - --recursive
           - --format=screen
           - --severity-level=low
           - --confidence-level=low
           - pm/
+        pass_filesnames: false
         types: [python]
-        exclude: ^tests/
 
-  # Dead Code Detect
+  # dead code
   - repo: https://github.com/jendrikseipp/vulture
     rev: v2.14
     hooks:
       - id: vulture
         language: system
         entry: uv run vulture
-        args:
-          - pm/
-          - --min-confidence=80
-          - --sort-by-size
-          - --ignore-names=__init__,__main__
+        pass_filenames: false
         types: [python]
 
-  # Tests
+  # tests
   - repo: local
     hooks:
       - id: pytest
         name: pytest
-        entry: bash -c 'uv run pytest || [ $? -eq 5 ]'
+        entry: bash -c 'uv run pytest'
         language: system
         pass_filenames: false
         stages: [pre-push]
