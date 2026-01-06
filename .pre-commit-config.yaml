@@ -46,7 +46,7 @@ repos:
     hooks:
       - id: mypy
         language: system
-        entry: uv run mypy .
+        entry: uv run mypy pm
         pass_filenames: false
         types: [python]
 
